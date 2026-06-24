@@ -38,7 +38,7 @@ export default function HomePage() {
     <main className="flex flex-1 flex-col items-center justify-center gap-4 p-8">
       <h1 className="text-3xl font-semibold tracking-tight">She Niketan</h1>
       <p className="text-muted-foreground text-center max-w-md text-zinc-600">
-        Girls Residence Management Systems — platform scaffolding initialized.
+        Girls Residence Management Systemssss — platform scaffolding initialized.
       </p>
     </main>
   );
