@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand Theme Colors */
+  --brand-cream: #FDFBF7;
+  --brand-beige: #FAF6F0;
+  --brand-sand: #F2ECE1;
+  --brand-charcoal: #2D302E;
+  --brand-forest: #3D4D3F;
+  --brand-forest-dark: #2C352E;
+  --brand-sage: #5F7261;
+  --brand-sage-hover: #4A5D4C;
+  --brand-sage-light: #E7ECE7;
+  --brand-sage-border: #D0DDD1;
+
+  /* Semantic Theme Colors */
+  --background: var(--brand-cream);
+  --foreground: var(--brand-charcoal);
+  --primary: var(--brand-sage);
+  --primary-hover: var(--brand-sage-hover);
+  --primary-light: var(--brand-sage-light);
+  --secondary: var(--brand-forest);
+  --muted-bg: var(--brand-beige);
+  --muted-border: var(--brand-sand);
+  --muted-accent: var(--brand-sage-border);
 }
 
-@theme inline {
+@theme {
+  /* Custom Font Families */
+  --font-sans: var(--font-geist-sans), Inter, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* Standard Base Semantic Palette */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Specific Brand Colors */
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-beige: var(--brand-beige);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-forest: var(--brand-forest);
+  --color-brand-forest-dark: var(--brand-forest-dark);
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-sage-hover: var(--brand-sage-hover);
+  --color-brand-sage-light: var(--brand-sage-light);
+  --color-brand-sage-border: var(--brand-sage-border);
+
+  /* General Semantic Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-muted-bg: var(--muted-bg);
+  --color-muted-border: var(--muted-border);
+  --color-muted-accent: var(--muted-accent);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
+

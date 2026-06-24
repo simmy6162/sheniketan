@@ -1,2 +1,3 @@
-/** Global pure utility helpers placeholder — Day 1+ */
-export {};
+export { hashPassword, verifyPassword, signToken, verifyToken } from '@/lib/auth';
+export { getSession } from '@/lib/get-session';
+export type { Session } from '@/lib/get-session';
