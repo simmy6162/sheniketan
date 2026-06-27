@@ -6,7 +6,7 @@ const PUBLIC_ROUTES = ['/login', '/register', '/auth/admin'];
 
 // Protected routes and which roles may access them
 const ROLE_MAP: Record<string, string[]> = {
-  '/admin':    ['admin'],
+  '/admin':    ['admin', 'warden'],
   '/resident': ['member', 'warden', 'admin'],
 };
 
@@ -29,7 +29,7 @@ export async function proxy(req: NextRequest) {
   // Redirect already-logged-in users away from auth pages
   if (PUBLIC_ROUTES.some((r) => pathname.startsWith(r))) {
     if (session) {
-      const dest = session.role === 'admin' ? '/admin' : '/resident';
+      const dest = session.role === 'admin' ? '/admin' : session.role === 'warden' ? '/admin/rooms' : '/resident';
       return NextResponse.redirect(new URL(dest, req.url));
     }
     return NextResponse.next();
@@ -49,8 +49,7 @@ export async function proxy(req: NextRequest) {
         return NextResponse.redirect(loginUrl);
       }
       if (!allowedRoles.includes(session.role)) {
-        // Wrong role — redirect to their correct home
-        const dest = session.role === 'admin' ? '/admin' : '/resident';
+        const dest = session.role === 'admin' ? '/admin' : session.role === 'warden' ? '/admin/rooms' : '/resident';
         return NextResponse.redirect(new URL(dest, req.url));
       }
     }

@@ -13,30 +13,32 @@ import {
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
-  { href: '/admin/wardens', label: 'Wardens', icon: Shield },
+  { href: '/admin/wardens', label: 'Wardens', icon: Shield, adminOnly: true },
   { href: '/admin/residents', label: 'Residents', icon: Users, disabled: true },
-  { href: '/admin/rooms', label: 'Rooms', icon: DoorOpen, disabled: true },
+  { href: '/admin/rooms', label: 'Rooms', icon: DoorOpen },
   { href: '/admin/notices', label: 'Notices', icon: Megaphone, disabled: true },
   { href: '/admin/settings', label: 'Settings', icon: Settings, disabled: true },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({ role }: { role: string }) {
   const pathname = usePathname();
 
   return (
     <aside className="flex w-60 shrink-0 flex-col border-r border-brand-sand bg-brand-beige">
       <div className="border-b border-brand-sand px-5 py-4">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-sage">
-          Admin Console
+          {role === 'admin' ? 'Admin Console' : 'Warden Console'}
         </p>
         <p className="font-serif text-lg text-brand-forest">She Niketan</p>
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
-        {NAV_ITEMS.map(({ href, label, icon: Icon, exact, disabled }) => {
+        {NAV_ITEMS.map(({ href, label, icon: Icon, exact, disabled, adminOnly }) => {
           const isActive = exact
             ? pathname === href
             : pathname.startsWith(href);
+
+          if (adminOnly && role !== 'admin') return null;
 
           if (disabled) {
             return (
@@ -57,7 +59,7 @@ export function AdminSidebar() {
               href={href}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
                 isActive
-                  ? 'bg-brand-sage text-brand-cream shadow-sm'
+                  ? 'bg-brand-purple text-white shadow-sm'
                   : 'text-brand-charcoal hover:bg-brand-sand'
               }`}
             >

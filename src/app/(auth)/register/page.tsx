@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock, User, Phone, UserPlus, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Phone, UserPlus, Loader2, AlertCircle, CheckCircle, Calendar } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,13 +14,16 @@ export default function RegisterPage() {
     phone: '',
     password: '',
     confirmPassword: '',
+    age: '',
+    occupation: '',
+    preferredRoomType: 'Single' as 'Single' | 'Shared',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+  const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,6 +50,9 @@ export default function RegisterPage() {
           email: form.email,
           phone: form.phone,
           password: form.password,
+          age: form.age ? Number(form.age) : undefined,
+          occupation: form.occupation || undefined,
+          preferredRoomType: form.preferredRoomType,
         }),
       });
 
@@ -68,14 +74,12 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full max-w-md">
-      {/* Header */}
       <div className="mb-8 space-y-1">
         <h1 className="font-serif text-3xl font-light text-brand-forest">Create your account</h1>
         <p className="text-sm text-slate-500">Join She Niketan as a resident member</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-
         {/* Full Name */}
         <div className="space-y-1.5">
           <label htmlFor="reg-name" className="text-xs uppercase tracking-wider font-semibold text-brand-charcoal block">
@@ -90,7 +94,7 @@ export default function RegisterPage() {
               value={form.name}
               onChange={update('name')}
               placeholder="Your full name"
-              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-sage transition-colors placeholder:text-gray-400"
+              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -110,7 +114,7 @@ export default function RegisterPage() {
               value={form.email}
               onChange={update('email')}
               placeholder="you@example.com"
-              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-sage transition-colors placeholder:text-gray-400"
+              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -128,8 +132,79 @@ export default function RegisterPage() {
               value={form.phone}
               onChange={update('phone')}
               placeholder="+977 98XXXXXXXX"
-              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-sage transition-colors placeholder:text-gray-400"
+              className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
             />
+          </div>
+        </div>
+
+        {/* Age + Occupation row */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label htmlFor="reg-age" className="text-xs uppercase tracking-wider font-semibold text-brand-charcoal block">
+              Age
+            </label>
+            <div className="relative">
+              <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-sage" />
+              <input
+                id="reg-age"
+                type="number"
+                min={16}
+                max={100}
+                value={form.age}
+                onChange={update('age')}
+                placeholder="Age"
+                className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="reg-occupation" className="text-xs uppercase tracking-wider font-semibold text-brand-charcoal block">
+              Occupation
+            </label>
+            <select
+              id="reg-occupation"
+              value={form.occupation}
+              onChange={update('occupation')}
+              className="w-full px-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors"
+            >
+              <option value="">Select</option>
+              <option value="Student">Student</option>
+              <option value="Working">Working</option>
+              <option value="Intern">Intern</option>
+              <option value="Exam Prep">Exam Prep</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Residence Preference */}
+        <div className="space-y-1.5">
+          <label className="text-xs uppercase tracking-wider font-semibold text-brand-charcoal block">
+            Residence Preference
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="preferredRoomType"
+                value="Single"
+                checked={form.preferredRoomType === 'Single'}
+                onChange={() => setForm((prev) => ({ ...prev, preferredRoomType: 'Single' }))}
+                className="w-4 h-4 text-brand-purple accent-brand-purple"
+              />
+              <span className="text-sm text-brand-charcoal">Single Room</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="preferredRoomType"
+                value="Shared"
+                checked={form.preferredRoomType === 'Shared'}
+                onChange={() => setForm((prev) => ({ ...prev, preferredRoomType: 'Shared' }))}
+                className="w-4 h-4 text-brand-purple accent-brand-purple"
+              />
+              <span className="text-sm text-brand-charcoal">Shared Room</span>
+            </label>
           </div>
         </div>
 
@@ -149,12 +224,12 @@ export default function RegisterPage() {
                 value={form.password}
                 onChange={update('password')}
                 placeholder="Min. 8 chars"
-                className="w-full pl-10 pr-10 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-sage transition-colors placeholder:text-gray-400"
+                className="w-full pl-10 pr-10 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-sage transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-purple transition-colors"
               >
                 {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               </button>
@@ -175,7 +250,7 @@ export default function RegisterPage() {
                 value={form.confirmPassword}
                 onChange={update('confirmPassword')}
                 placeholder="Re-enter"
-                className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-sage transition-colors placeholder:text-gray-400"
+                className="w-full pl-10 pr-4 py-3.5 border border-brand-sand rounded-xl bg-brand-cream text-sm text-brand-charcoal focus:outline-none focus:border-brand-purple transition-colors placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -190,7 +265,7 @@ export default function RegisterPage() {
                   key={i}
                   className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
                     form.password.length >= len
-                      ? i === 0 ? 'bg-amber-400' : i === 1 ? 'bg-brand-sage' : 'bg-emerald-500'
+                      ? i === 0 ? 'bg-amber-400' : i === 1 ? 'bg-brand-purple' : 'bg-emerald-500'
                       : 'bg-brand-sand'
                   }`}
                 />
@@ -216,19 +291,17 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Terms note */}
         <p className="text-[11px] text-gray-400 leading-relaxed">
-          By creating an account, you agree to She Niketan's{' '}
-          <span className="text-brand-sage font-medium">Resident Charter</span> and{' '}
-          <span className="text-brand-sage font-medium">Privacy Policy</span>.
+          By creating an account, you agree to She Niketan&apos;s{' '}
+          <span className="text-brand-purple font-medium">Resident Charter</span> and{' '}
+          <span className="text-brand-purple font-medium">Privacy Policy</span>.
         </p>
 
-        {/* Submit */}
         <button
           type="submit"
           id="register-submit"
           disabled={loading}
-          className="w-full bg-brand-sage hover:bg-brand-sage-hover disabled:opacity-60 disabled:cursor-not-allowed text-brand-cream py-4 rounded-xl text-xs uppercase tracking-wider font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-sage/20"
+          className="w-full bg-brand-purple hover:bg-brand-purple-hover disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-xl text-xs uppercase tracking-wider font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-purple/20"
         >
           {loading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -239,10 +312,9 @@ export default function RegisterPage() {
         </button>
       </form>
 
-      {/* Sign in link */}
       <div className="mt-8 text-center text-sm text-slate-500">
         Already have an account?{' '}
-        <Link href="/login" className="text-brand-sage hover:text-brand-forest font-semibold transition-colors">
+        <Link href="/login" className="text-brand-purple hover:text-brand-purple-hover font-semibold transition-colors">
           Sign in
         </Link>
       </div>

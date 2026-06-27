@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Determine redirect path based on role
-    const redirectPath = user.role === 'warden' ? '/resident' : '/resident';
+    const redirectPath = user.role === 'warden' ? '/admin/rooms' : '/resident';
 
     const response = NextResponse.json(
       {

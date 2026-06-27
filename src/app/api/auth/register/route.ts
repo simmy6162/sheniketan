@@ -1,20 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
+import { allocateSharedRoom } from '@/app/(dashboard)/features/rooms/actions';
 import type { User } from '@/types';
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, phone, role } = await req.json();
+    const { name, email, password, phone, age, occupation, preferredRoomType } = await req.json();
 
-    if (role && role !== 'member') {
-      return NextResponse.json(
-        { success: false, message: 'Only resident (member) self-registration is allowed.' },
-        { status: 403 }
-      );
-    }
-
-    // Validate required fields
     if (!name || !email || !password) {
       return NextResponse.json(
         { success: false, message: 'Name, email and password are required.' },
@@ -34,7 +27,6 @@ export async function POST(req: NextRequest) {
 
     await users.createIndex({ email: 1 }, { unique: true }).catch(() => null);
 
-    // Check for existing user
     const existing = await users.findOne({ email: email.toLowerCase() });
     if (existing) {
       return NextResponse.json(
@@ -43,21 +35,47 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create member user
     const newUser: User = {
       name: name.trim(),
       email: email.toLowerCase().trim(),
       passwordHash: hashPassword(password),
       role: 'member',
       phone: phone || '',
+      age: age || undefined,
+      occupation: occupation || undefined,
+      preferredRoomType: preferredRoomType || 'Single',
+      allocationStatus: 'None',
+      allocationMessage: '',
       createdAt: new Date(),
       isActive: true,
     };
 
-    await users.insertOne(newUser);
+    const result = await users.insertOne(newUser);
+    const userId = result.insertedId.toString();
+
+    let allocationResult = null;
+    if (preferredRoomType === 'Shared') {
+      try {
+        allocationResult = await allocateSharedRoom(userId, {
+          age: age || undefined,
+          occupation: occupation || undefined,
+        });
+      } catch (err) {
+        console.error('[REGISTER ALLOCATION ERROR]', err);
+      }
+    }
 
     return NextResponse.json(
-      { success: true, message: 'Account created successfully! Please log in.' },
+      {
+        success: true,
+        message: allocationResult?.success
+          ? `Account created and room allocated! ${allocationResult.message}`
+          : 'Account created successfully! Please log in.',
+        data: {
+          id: userId,
+          allocation: allocationResult,
+        },
+      },
       { status: 201 }
     );
   } catch (error) {

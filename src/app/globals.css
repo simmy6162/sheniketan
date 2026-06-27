@@ -13,6 +13,13 @@
   --brand-sage-light: #E7ECE7;
   --brand-sage-border: #D0DDD1;
 
+  /* Purple/Lavender Accent Colors */
+  --brand-purple: #7C3AED;
+  --brand-purple-hover: #6D28D9;
+  --brand-purple-light: #EDE9FE;
+  --brand-purple-border: #C4B5FD;
+  --brand-lavender: #F5F3FF;
+
   /* Semantic Theme Colors */
   --background: var(--brand-cream);
   --foreground: var(--brand-charcoal);
@@ -46,6 +53,11 @@
   --color-brand-sage-hover: var(--brand-sage-hover);
   --color-brand-sage-light: var(--brand-sage-light);
   --color-brand-sage-border: var(--brand-sage-border);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-purple-hover: var(--brand-purple-hover);
+  --color-brand-purple-light: var(--brand-purple-light);
+  --color-brand-purple-border: var(--brand-purple-border);
+  --color-brand-lavender: var(--brand-lavender);
 
   /* General Semantic Colors */
   --color-primary: var(--primary);

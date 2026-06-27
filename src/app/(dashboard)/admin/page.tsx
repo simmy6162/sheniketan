@@ -1,7 +1,16 @@
 import Link from 'next/link';
-import { Shield, ArrowRight } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/get-session';
+import { Shield, DoorOpen, ArrowRight } from 'lucide-react';
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const session = await getSession();
+  if (!session) redirect('/login');
+
+  if (session.role === 'warden') {
+    redirect('/admin/rooms');
+  }
+
   return (
     <section className="space-y-6">
       <div className="space-y-2">
@@ -25,6 +34,23 @@ export default function AdminDashboardPage() {
           </p>
           <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-brand-sage group-hover:gap-2 transition-all">
             Manage wardens
+            <ArrowRight className="h-3.5 w-3.5" />
+          </span>
+        </Link>
+
+        <Link
+          href="/admin/rooms"
+          className="group rounded-2xl border border-brand-sand bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+        >
+          <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-purple-light text-brand-purple">
+            <DoorOpen className="h-5 w-5" />
+          </div>
+          <h2 className="font-serif text-lg text-brand-forest">Room Management</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Manage rooms, view occupancy, and allocate residents.
+          </p>
+          <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-brand-purple group-hover:gap-2 transition-all">
+            Manage rooms
             <ArrowRight className="h-3.5 w-3.5" />
           </span>
         </Link>

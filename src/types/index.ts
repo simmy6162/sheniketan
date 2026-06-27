@@ -1,5 +1,8 @@
 /** User roles across She Niketan platform */
 export type UserRole = 'member' | 'warden' | 'admin';
+export type Occupation = 'Student' | 'Working' | 'Intern' | 'Exam Prep';
+export type PreferredRoomType = 'Single' | 'Shared';
+export type AllocationStatus = 'Pending' | 'Allocated' | 'Waitlisted' | 'None';
 
 export interface User {
   _id?: string;
@@ -9,6 +12,11 @@ export interface User {
   role: UserRole;
   phone?: string;
   roomNumber?: string;
+  age?: number;
+  occupation?: Occupation;
+  preferredRoomType?: PreferredRoomType;
+  allocationStatus?: AllocationStatus;
+  allocationMessage?: string;
   createdAt: Date;
   isActive: boolean;
 }
